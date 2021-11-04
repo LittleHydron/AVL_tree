@@ -162,15 +162,15 @@ public:
     void delete_if(bool f(contentType)){
         if (root == nullptr) return;
         bool found = true;
-        while(found){
+        while(found){ /// Поки знайшли хоча б одного такого, що підходить
             found = false;
             queue < Node* > q;
             if (root == nullptr) return;
             q.push(root);
-            while(!q.empty()){
+            while(!q.empty()){ /// Шукаємо ще одного. Якщо не знайдемо, то стоп цикл
                 Node * node = q.front();
                 q.pop();
-                if (f(node->content)){
+                if (f(node->content)){ /// Якщо знайшли, то видаляємо, ставимо прапорець, що варто шукати ще раз і припиняємо пошук
                     found = true;
                     root = deleteNode(root, node->content);
                     break;
