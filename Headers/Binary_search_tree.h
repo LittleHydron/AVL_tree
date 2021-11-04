@@ -99,7 +99,7 @@ private:
                     tmp = ptr;
                     ptr = nullptr;
                 }else *ptr = *tmp;
-                free(tmp);
+                //free(tmp);
             }else{
                 Node *tmp = ptr->rightChild;
                 while(tmp->leftChild != nullptr) tmp = tmp->leftChild;
@@ -111,14 +111,14 @@ private:
         ptr->depth = 1 + std::max(getDepth(ptr->leftChild), getDepth(ptr->rightChild));
         int difference = getDifference(ptr);
         if (difference > 1){
-            if (getDifference(ptr->leftChild) >= 0) return RightRotation(ptr);
+            if (getDifference(ptr->leftChild) > 1) return RightRotation(ptr);
             else{
                 ptr->leftChild = LeftRotation(ptr->leftChild);
                 return RightRotation(ptr);
             }
         }else{
             if (difference < -1){
-                if (getDifference(ptr->rightChild) <= 0) return LeftRotation(ptr);
+                if (getDifference(ptr->rightChild) < -1) return LeftRotation(ptr);
                 else{
                     ptr->rightChild = RightRotation(ptr->rightChild);
                     return LeftRotation(ptr);
@@ -161,19 +161,24 @@ public:
     }
     void delete_if(bool f(contentType)){
         if (root == nullptr) return;
-        queue < Node* > q, q_for_delete;
-        q.push(root);
-        while(!q.empty()){
-            Node *node = q.front();
-            q.pop();
-            if (f(node->content)) q_for_delete.push(node);
-            if (node->leftChild != nullptr) q.push(node->leftChild);
-            if (node->rightChild != nullptr) q.push(node->rightChild);
-        }
-        while(!q_for_delete.empty()){
-            Node *node = q_for_delete.front();
-            q_for_delete.pop();
-            root = deleteNode(root, node->content);
+        bool found = true;
+        while(found){
+            found = false;
+            queue < Node* > q;
+            if (root == nullptr) return;
+            q.push(root);
+            while(!q.empty()){
+                Node * node = q.front();
+                q.pop();
+                if (f(node->content)){
+                    found = true;
+                    root = deleteNode(root, node->content);
+                    break;
+                }else{
+                    if (node->leftChild != nullptr) q.push(node->leftChild);
+                    if (node->rightChild != nullptr) q.push(node->rightChild);
+                }
+            }
         }
     }
 };
