@@ -99,7 +99,7 @@ private:
                     tmp = ptr;
                     ptr = nullptr;
                 }else *ptr = *tmp;
-                //free(tmp);
+                free(tmp);
             }else{
                 Node *tmp = ptr->rightChild;
                 while(tmp->leftChild != nullptr) tmp = tmp->leftChild;
